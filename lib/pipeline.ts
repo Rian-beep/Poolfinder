@@ -1,7 +1,8 @@
 import { v4 as uuidv4 } from 'uuid'
 import { getDb, Property } from './db'
 import { lookupPostcode } from './connectors/postcodes-io'
-import { getSatelliteImageUrl, getRenderedImageUrl } from './connectors/google-maps'
+import { getSatelliteImageUrl } from './connectors/google-maps'
+import { renderPoolIntoProperty } from './connectors/openai-render'
 import { getAveragePrices, estimatePoolBuildCost, estimateHomeValueLift } from './connectors/property-data'
 import { analyseSatelliteImage, generatePostcardCopy } from './connectors/anthropic'
 import seedPostcodes from '../data/seed-postcodes.json'
@@ -114,7 +115,8 @@ export async function runPipeline(propertyId: string): Promise<void> {
     // ── Stage 3: Pool rendered ────────────────────────────────────────────
     updateProperty(propertyId, { current_stage: 'Rendering pool', step_number: 3 })
 
-    const renderedUrl = await getRenderedImageUrl(lat, lng)
+    const aiRenderUrl = await renderPoolIntoProperty(satelliteUrl, propertyId)
+    const renderedUrl = aiRenderUrl ?? satelliteUrl
     updateProperty(propertyId, { rendered_image_url: renderedUrl })
 
     writeEvent(

@@ -81,8 +81,9 @@ export default function PropertyView({ property }: Props) {
   }
 
   const showRendered = !!property.rendered_image_url && property.step_number >= 3
-  // Always use satellite image as base — we overlay the pool via SVG
-  const imageUrl = property.satellite_image_url
+  const isAiRender = showRendered && (property.rendered_image_url ?? '').startsWith('/renders/')
+  // Use AI render when available, otherwise fall back to satellite image
+  const imageUrl = isAiRender ? property.rendered_image_url : property.satellite_image_url
   const lotSize = property.lot_size_sqft
     ? `${property.lot_size_sqft.toLocaleString()} sqft`
     : '— sqft'
@@ -113,8 +114,8 @@ export default function PropertyView({ property }: Props) {
           </div>
         )}
 
-        {/* SVG pool overlay — appears at stage 3 */}
-        {showRendered && <PoolSvgOverlay />}
+        {/* SVG pool overlay — only when no AI render available */}
+        {showRendered && !isAiRender && <PoolSvgOverlay />}
 
         {/* POOL RENDERED badge */}
         {showRendered && (
