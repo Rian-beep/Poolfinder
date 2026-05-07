@@ -54,11 +54,10 @@ export function getNextPostcode(): { postcode: string; town: string; county: str
   const db = getDb()
   const used = db.prepare('SELECT postcode FROM properties').all() as { postcode: string }[]
   const usedSet = new Set(used.map((r) => r.postcode))
-  const remaining = (seedPostcodes as { postcode: string; town: string; county: string }[]).filter(
-    (p) => !usedSet.has(p.postcode)
-  )
-  if (!remaining.length) return null
-  return remaining[0]
+  const all = seedPostcodes as { postcode: string; town: string; county: string }[]
+  const remaining = all.filter((p) => !usedSet.has(p.postcode))
+  // Cycle back through from the beginning if all have been used
+  return remaining.length ? remaining[0] : all[used.length % all.length]
 }
 
 export async function runPipeline(propertyId: string): Promise<void> {
