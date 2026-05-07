@@ -1,0 +1,12 @@
+[
+  { "postcode": "KT10 9PN", "town": "Esher", "county": "Surrey" },
+  { "postcode": "GU1 1HZ", "town": "Guildford", "county": "Surrey" },
+  { "postcode": "HP9 2LT", "town": "Beaconsfield", "county": "Buckinghamshire" },
+  { "postcode": "RG9 1HB", "town": "Henley-on-Thames", "county": "Oxfordshire" },
+  { "postcode": "OX2 6JA", "town": "Oxford", "county": "Oxfordshire" },
+  { "postcode": "AL3 6UE", "town": "St Albans", "county": "Hertfordshire" },
+  { "postcode": "SL5 9JL", "town": "Ascot", "county": "Berkshire" },
+  { "postcode": "RH2 9PS", "town": "Reigate", "county": "Surrey" },
+  { "postcode": "TW10 5LJ", "town": "Richmond", "county": "Greater London" },
+  { "postcode": "CB2 5EF", "town": "Cambridge", "county": "Cambridgeshire" }
+]
