@@ -2,14 +2,24 @@ import OpenAI from 'openai'
 import path from 'path'
 import fs from 'fs'
 
-const POOL_PROMPT = `This is a UK residential property viewed from above. Add a luxury rectangular outdoor swimming pool with crystal-clear blue water to the rear garden / backyard. The pool should:
-- Be positioned naturally within the existing garden space, oriented to fit the available lawn area
-- Have a modern rectangular shape with clean white or light stone coping around the edge
-- Show realistic water with subtle caustic light patterns and a slight turquoise-blue colour
-- Include a small patio/decking area alongside one end
-- Look photorealistic and seamlessly integrated with the existing garden landscaping
-- Not overlap any buildings, fences, driveways, or trees
-Keep all other parts of the image exactly as they are. The result should look like a genuine aerial photograph of the property with a real pool installed.`
+const POOL_PROMPT = `You are editing an aerial satellite photograph of a UK residential property. Your ONLY task is to add a luxury swimming pool to the rear garden lawn area.
+
+STRICT PRESERVATION RULES — do NOT change any of these:
+- All buildings, houses, and rooftops must remain pixel-perfect identical
+- All roads, pavements, driveways, and parked cars must remain unchanged
+- All neighbouring properties, fences, walls, and hedges must remain unchanged
+- All trees, shrubs, and garden borders outside the pool area must remain unchanged
+- The overall composition, perspective, zoom level, and colour palette must remain identical
+
+POOL PLACEMENT — only modify the open lawn/grass area in the rear garden:
+- Place one rectangular pool (approx 10m x 5m at image scale) on the largest continuous area of lawn in the back garden, oriented along the longest axis of the garden
+- Pool water: deep turquoise-blue with subtle caustic light ripples and a lighter centre highlight
+- Coping: 0.5m wide border of light limestone or white stone around all four edges
+- Small sandstone or grey paving area at one short end of the pool (no furniture)
+- The pool must sit flush with the surrounding lawn — no raised decking, no displacement of soil
+- Do not add fencing, cover, equipment housing, or any other structures
+
+The final image must look like an unedited aerial photograph — only the pool and its immediate stone surround should differ from the original.`
 
 export async function renderPoolIntoProperty(
   satelliteImageUrl: string,

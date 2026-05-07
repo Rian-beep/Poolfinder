@@ -101,8 +101,21 @@ export async function runPipeline(propertyId: string): Promise<void> {
     // ── Stage 2: Pool-ready zone ──────────────────────────────────────────
     updateProperty(propertyId, { current_stage: 'Identifying pool zone', step_number: 2 })
 
-    const filterPassed = lotSize >= 600 && !hasPool ? 1 : 1 // always pass for demo
+    // Require at least 2,500 sqft lot and no existing pool
+    const MIN_LOT_SQFT = 2500
+    const filterPassed = lotSize >= MIN_LOT_SQFT && !hasPool ? 1 : 0
     updateProperty(propertyId, { filter_passed: filterPassed })
+
+    if (!filterPassed) {
+      writeEvent(
+        propertyId, 'zone',
+        'Property skipped',
+        `${lotSize.toLocaleString()} sqft — below ${MIN_LOT_SQFT.toLocaleString()} sqft threshold or pool present`,
+        'ti-map-pin'
+      )
+      updateProperty(propertyId, { current_stage: 'Skipped — lot too small', status: 'complete', step_number: 9 })
+      return
+    }
 
     writeEvent(
       propertyId, 'zone',

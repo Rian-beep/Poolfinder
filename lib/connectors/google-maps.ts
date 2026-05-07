@@ -16,13 +16,13 @@ async function isMapsKeyValid(key: string): Promise<boolean> {
   }
 }
 
-export async function getSatelliteImageUrl(lat: number, lng: number, zoom = 19): Promise<string> {
+export async function getSatelliteImageUrl(lat: number, lng: number, zoom = 20): Promise<string> {
   const key = process.env.GOOGLE_MAPS_API_KEY
   if (key && await isMapsKeyValid(key)) {
     const params = new URLSearchParams({
       center: `${lat},${lng}`,
       zoom: String(zoom),
-      size: '640x480',
+      size: '640x640',
       maptype: 'satellite',
       key,
     })
