@@ -2,24 +2,26 @@ import OpenAI from 'openai'
 import path from 'path'
 import fs from 'fs'
 
-const POOL_PROMPT = `You are editing an aerial satellite photograph of a UK residential property. Your ONLY task is to add a luxury swimming pool to the rear garden lawn area.
+const POOL_PROMPT = `This is a real aerial satellite photograph taken directly overhead (nadir view, 90 degrees) of a UK residential property. Seamlessly composite a luxury swimming pool into the rear garden.
 
-STRICT PRESERVATION RULES — do NOT change any of these:
-- All buildings, houses, and rooftops must remain pixel-perfect identical
-- All roads, pavements, driveways, and parked cars must remain unchanged
-- All neighbouring properties, fences, walls, and hedges must remain unchanged
-- All trees, shrubs, and garden borders outside the pool area must remain unchanged
-- The overall composition, perspective, zoom level, and colour palette must remain identical
+WHAT MUST NOT CHANGE — preserve these exactly:
+- Every building, rooftop, chimney, and wall
+- Every road, pavement, driveway, and parked vehicle
+- Every neighbouring garden, fence, hedge, and boundary
+- All trees and shrubs outside the pool area
+- The satellite image grain, colour grading, and lighting direction
 
-POOL PLACEMENT — only modify the open lawn/grass area in the rear garden:
-- Place one rectangular pool (approx 10m x 5m at image scale) on the largest continuous area of lawn in the back garden, oriented along the longest axis of the garden
-- Pool water: deep turquoise-blue with subtle caustic light ripples and a lighter centre highlight
-- Coping: 0.5m wide border of light limestone or white stone around all four edges
-- Small sandstone or grey paving area at one short end of the pool (no furniture)
-- The pool must sit flush with the surrounding lawn — no raised decking, no displacement of soil
-- Do not add fencing, cover, equipment housing, or any other structures
+HOW TO PLACE THE POOL — modify only the open grass/lawn in the rear garden:
+- Find the largest unobstructed rectangular area of lawn behind the main house
+- Place a single rectangular pool aligned with the garden's longest axis, sized proportionally to the garden (roughly 10m × 5m real-world)
+- View is directly from above: the pool appears as a flat rectangle — no perspective, no depth illusion, no 3-D rendering
+- Water colour: medium-dark teal/blue (hex approx #1E7EA1) — not cartoon-bright; realistic as seen from satellite altitude
+- Subtle caustic shimmer pattern across the water surface, very faint
+- White or pale limestone coping 0.6m wide around all four pool edges — flat, seen from above
+- A small area of pale stone paving at one short end only (no sun loungers, no furniture, no cover)
+- Pool edges must be sharp and straight, flush with the surrounding lawn — no shadows, no raised structure
 
-The final image must look like an unedited aerial photograph — only the pool and its immediate stone surround should differ from the original.`
+OUTPUT: the result must be indistinguishable from an unedited satellite photograph. A viewer should believe the pool was really there when the satellite passed over.`
 
 export async function renderPoolIntoProperty(
   satelliteImageUrl: string,

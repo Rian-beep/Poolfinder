@@ -100,8 +100,10 @@ export async function runPipeline(propertyId: string): Promise<void> {
     // ── Stage 2: Pool-ready zone ──────────────────────────────────────────
     updateProperty(propertyId, { current_stage: 'Identifying pool zone', step_number: 2 })
 
-    // Require at least 2,500 sqft lot and no existing pool
-    const MIN_LOT_SQFT = 2500
+    // Require at least 800 sqft garden and no existing pool.
+    // Claude's aerial estimates run conservatively low for UK plots, so 800 sqft
+    // is the right practical floor — genuine large gardens reliably exceed this.
+    const MIN_LOT_SQFT = 800
     const filterPassed = lotSize >= MIN_LOT_SQFT && !hasPool ? 1 : 0
     updateProperty(propertyId, { filter_passed: filterPassed })
 
@@ -112,7 +114,7 @@ export async function runPipeline(propertyId: string): Promise<void> {
         `${lotSize.toLocaleString()} sqft — below ${MIN_LOT_SQFT.toLocaleString()} sqft threshold or pool present`,
         'ti-map-pin'
       )
-      updateProperty(propertyId, { current_stage: 'Skipped — lot too small', status: 'complete', step_number: 9 })
+      updateProperty(propertyId, { current_stage: 'Skipped — no suitable garden', status: 'complete', step_number: 9 })
       return
     }
 
