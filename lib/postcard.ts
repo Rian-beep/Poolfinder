@@ -17,11 +17,16 @@ interface PostcardParams {
 }
 
 export async function generatePostcardPdf(params: PostcardParams): Promise<string> {
+  const clean = (s: string) => s.replace(/[\r\n]+/g, ' ').replace(/[^\x20-\x7E\xA0-\xFF]/g, '')
+
   const {
-    propertyId, address, town, postcode,
+    propertyId,
     poolBuildCost, homeValueLift, propertyValue,
-    copy,
   } = params
+  const address = clean(params.address)
+  const town = clean(params.town)
+  const postcode = clean(params.postcode)
+  const copy = clean(params.copy)
 
   // 6×9 inches at 72 DPI = 432×648 points
   const pdfDoc = await PDFDocument.create()
@@ -76,6 +81,7 @@ export async function generatePostcardPdf(params: PostcardParams): Promise<strin
   let line = ''
   let yPos = height - 112
   for (const word of words) {
+    if (!word) continue
     const test = line ? `${line} ${word}` : word
     const testWidth = regularFont.widthOfTextAtSize(test, 10)
     if (testWidth > maxWidth && line) {

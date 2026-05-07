@@ -75,7 +75,7 @@ export async function runPipeline(propertyId: string): Promise<void> {
     const town = postcodeData?.admin_district ?? property.town
     const region = postcodeData?.region ?? 'South East'
 
-    const satelliteUrl = getSatelliteImageUrl(lat, lng)
+    const satelliteUrl = await getSatelliteImageUrl(lat, lng)
     updateProperty(propertyId, { lat, lng, town, satellite_image_url: satelliteUrl })
 
     const analysis = await analyseSatelliteImage(satelliteUrl)
@@ -114,7 +114,7 @@ export async function runPipeline(propertyId: string): Promise<void> {
     // ── Stage 3: Pool rendered ────────────────────────────────────────────
     updateProperty(propertyId, { current_stage: 'Rendering pool', step_number: 3 })
 
-    const renderedUrl = getRenderedImageUrl(lat, lng)
+    const renderedUrl = await getRenderedImageUrl(lat, lng)
     updateProperty(propertyId, { rendered_image_url: renderedUrl })
 
     writeEvent(
